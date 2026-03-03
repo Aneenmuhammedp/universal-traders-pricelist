@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Calculator with GST</title>
+
+<style>
+
+body{
+
+  margin:0;
+
+  background:black;
+
+  font-family:Arial;
+
+}
+
+.calculator{
+
+  width:100%;
+
+  max-width:350px;
+
+  margin:auto;
+
+  padding:20px;
+
+}
+
+.display{
+
+  color:white;
+
+  font-size:48px;
+
+  text-align:right;
+
+  padding:20px 10px;
+
+  min-height:60px;
+
+}
+
+.buttons{
+
+  display:grid;
+
+  grid-template-columns:repeat(4,1fr);
+
+  gap:15px;
+
+}
+
+button{
+
+  height:70px;
+
+  font-size:24px;
+
+  border:none;
+
+  border-radius:50%;
+
+  background:#333;
+
+  color:white;
+
+}
+
+button.orange{
+
+  background:#ff9500;
+
+}
+
+button.gray{
+
+  background:#a5a5a5;
+
+  color:black;
+
+}
+
+button.zero{
+
+  grid-column:span 2;
+
+  border-radius:35px;
+
+  text-align:left;
+
+  padding-left:30px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<div class="calculator">
+
+  <div class="display" id="display">0</div>
+
+
+
+  <div class="buttons">
+
+    <button class="gray" onclick="clearDisplay()">AC</button>
+
+    <button class="gray" onclick="removeGST()">GST</button>
+
+    <button class="gray" onclick="percent()">%</button>
+
+    <button class="orange" onclick="setOperator('/')">÷</button>
+
+
+
+    <button onclick="append('7')">7</button>
+
+    <button onclick="append('8')">8</button>
+
+    <button onclick="append('9')">9</button>
+
+    <button class="orange" onclick="setOperator('*')">×</button>
+
+
+
+    <button onclick="append('4')">4</button>
+
+    <button onclick="append('5')">5</button>
+
+    <button onclick="append('6')">6</button>
+
+    <button class="orange" onclick="setOperator('-')">−</button>
+
+
+
+    <button onclick="append('1')">1</button>
+
+    <button onclick="append('2')">2</button>
+
+    <button onclick="append('3')">3</button>
+
+    <button class="orange" onclick="setOperator('+')">+</button>
+
+
+
+    <button class="zero" onclick="append('0')">0</button>
+
+    <button onclick="append('.')">.</button>
+
+    <button class="orange" onclick="calculate()">=</button>
+
+  </div>
+
+</div>
+
+
+
+<script>
+
+let display = document.getElementById("display");
+
+let current = "";
+
+let operator = "";
+
+let firstValue = "";
+
+
+
+// Append number
+
+function append(num){
+
+  if(display.innerText === "0") current = num;
+
+  else current += num;
+
+  display.innerText = current;
+
+}
+
+
+
+// Clear
+
+function clearDisplay(){
+
+  current="";
+
+  firstValue="";
+
+  operator="";
+
+  display.innerText="0";
+
+}
+
+
+
+// Operator
+
+function setOperator(op){
+
+  firstValue=current;
+
+  operator=op;
+
+  current="";
+
+}
+
+
+
+// Calculate
+
+function calculate(){
+
+  let result=0;
+
+  let a=parseFloat(firstValue);
+
+  let b=parseFloat(current);
+
+
+
+  if(operator==="+") result=a+b;
+
+  if(operator==="-") result=a-b;
+
+  if(operator==="*") result=a*b;
+
+  if(operator==="/") result=a/b;
+
+
+
+  display.innerText=result;
+
+  current=result;
+
+}
+
+
+
+// Percent
+
+function percent(){
+
+  current=parseFloat(current)/100;
+
+  display.innerText=current;
+
+}
+
+
+
+// 🔥 GST Remove (18%)
+
+function removeGST(){
+
+  let finalAmount=parseFloat(display.innerText);
+
+  if(isNaN(finalAmount)) return;
+
+
+
+  let baseAmount=finalAmount/1.18; // remove 18% GST
+
+  display.innerText=baseAmount.toFixed(2);
+
+  current=display.innerText;
+
+}
+
+</script>
+
+
+
+</body>
+
+</html>

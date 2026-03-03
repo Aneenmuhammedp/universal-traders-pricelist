@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Price List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin:0;
+      padding-top: 80px;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      
+      /* Theme inspired by your logo (blue gradient) */
+      background: linear-gradient(135deg, #0f2f76, #2b6edc, #6fa8ff);
+    }
+
+    .container {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      width: 140px;
+      height: auto;
+      border-radius: 8px;
+      background: white;
+      padding: 10px;
+    }
+
+    h1 {
+      color: white;
+      letter-spacing: 2px;
+      margin: 0;
+      font-family: serif;
+    }
+    .navbar{
+
+  position: fixed;
+
+  top: 0;
+
+  width: 100%;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 20px 30px;
+
+  background: rgba(0,0,0,0.3);
+
+  backdrop-filter: blur(10px);
+
+  z-index: 1000;
+
+}
+
+
+
+.nav-left{
+
+  color: whitesmoke;
+
+  font-size: 20px;
+
+  font-weight: bold;
+
+}
+
+
+
+.nav-right a{
+
+  color: whitesmoke;
+
+  text-decoration: none;
+
+  margin-left: 25px;
+
+  font-size: 18px;
+
+  transition: 0.3s;
+
+  font-weight: bold;
+
+}
+
+
+
+.nav-right a:hover{
+
+  color: #38bdf8;
+
+}
+
+/* ===== 480px MOBILE HORIZONTAL NAV FIX ===== */
+
+@media (max-width: 480px) {
+
+
+
+  .navbar {
+
+    flex-direction: row;          /* KEEP horizontal */
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 8px 12px;
+
+    white-space: nowrap;          /* Prevent wrapping */
+
+  }
+
+
+
+  .nav-left {
+
+    font-size: 14px;              /* Smaller logo text */
+
+  }
+
+
+
+  .nav-right {
+
+    display: flex;
+
+    align-items: center;
+
+  }
+
+
+
+  .nav-right a {
+
+    margin-left: 10px;            /* Reduce spacing */
+
+    font-size: 12px;              /* Smaller menu text */
+
+  }
+
+
+
+}
+
+
+.ticker{
+
+  width:100%;
+
+  overflow:hidden;
+
+  background:#0ea5e9;
+
+  color:white;
+
+  font-weight:bold;
+
+  padding:8px 0;
+
+  position:fixed;
+
+  top:60px; /* below navbar */
+
+  z-index:999;
+
+}
+
+
+
+.ticker-track{
+
+  display:inline-block;
+
+  white-space:nowrap;
+
+  animation: scrollTicker 15s linear infinite;
+
+}
+
+
+
+@keyframes scrollTicker{
+
+  from{ transform: translateX(100%); }
+
+  to{ transform: translateX(-100%); }
+
+}
+
+
+    
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+<div class="nav-left">UNIVERSAL TRADERS</div>
+<div class="nav-right">
+<a href="items.html">ITEMS</a>
+<a href="calculator.html">CALCULATOR</a>
+<a href="quotation.html">QUATATION</a>
+</div>
+</nav>
+<div class="ticker">
+<div class="ticker-track" id="tickerTrack">
+Aluminium: ₹485/kg &nbsp;&nbsp; | &nbsp;&nbsp;
+Aluminium Brands: JINDAL , ALUCRAFT &nbsp;&nbsp; | &nbsp;&nbsp;
+PVC Sheet: LEXA, SARVESH &nbsp;&nbsp; | &nbsp;&nbsp;
+LADDER: Customizable Ladder &nbsp;&nbsp; | &nbsp;&nbsp;
+Contact us:9947976620 &nbsp;&nbsp; 
+</div>
+</div>
+
+  <div class="container">
+    <!-- Center Logo -->
+    <img 
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz-XQEA1_owpEbBVoXBSHzDCMr0X9mKOHMJlXr9uX1CyO2JhTah73qv8Dh&s=10" 
+      alt="Universal Traders Logo" 
+      class="logo"
+      onclick="toggleSearch()"
+    >
+
+
+
+    <!-- Heading -->
+    <h1>UNIVERSAL TRADERS</h1>
+
+    
+
+    <!-- SEARCH BOX (hidden initially) -->
+
+
+<div id="searchSection" style="display:none;">
+
+  <input type="text" id="searchInput"
+
+         placeholder="Search item name.."
+
+         style="padding:12px; width:300px; border-radius:8px; border:none;">
+
+  
+
+  <button onclick="searchItem()"
+
+          style="padding:12px 20px; border:none; border-radius:8px; background:#0ea5e9; color:white; cursor:pointer;">
+
+    Search
+
+  </button>
+
+
+
+  <div id="resultBox" style="margin-top:15px; font-size:18px;"></div>
+
+</div>
+
+<script>
+
+const logo = document.querySelector(".logo");
+
+const searchBox = document.getElementById("searchBox");
+
+
+
+logo.addEventListener("click", () => {
+
+  searchBox.style.display =
+
+    searchBox.style.display === "none" ? "block" : "none";
+
+});
+
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyDFD7MhXjxBxctyjer9jp7pLh6E6ek4y4A",
+authDomain: "universal-traders-pricelist.firebaseapp.com",
+projectId: "universal-traders-pricelist",
+storageBucket: "universal-traders-pricelist.firebasestorage.app",
+messagingSenderId: "150604008965",
+appId: "1:150604008965:web:efe915ee6cbce92530566c"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.searchItem = async function(){
+const query = document.getElementById("searchInput").value.toLowerCase();
+const resultBox = document.getElementById("resultBox");
+
+const snapshot = await getDocs(collection(db, "items"));
+
+let found = false;
+
+snapshot.forEach(doc => {
+const item = doc.data();
+if(item.name.toLowerCase().includes(query)){
+resultBox.innerHTML = `
+✅ Found:<br>
+<b>Item:</b> ${item.name}<br>
+<b>Weight:</b> ${item.weight}<br>
+<b>Price:</b> ₹${item.price}
+`;
+found = true;
+}
+});
+
+if(!found){
+resultBox.innerHTML = "❌ Item not found";
+}
+}
+</script>
+
+<script>
+function toggleSearch(){
+const box = document.getElementById("searchSection");
+if(box.style.display === "none"){
+box.style.display = "block";
+}else{
+box.style.display = "none";
+}
+}
+</script>
+
+  
+</body>
+</html>

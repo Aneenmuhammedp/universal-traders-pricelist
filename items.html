@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Universal Aluminium - Item Sheets</title>
+
+
+
+<style>
+
+body{
+
+  margin:0;
+
+  font-family: arial, sans-serif;
+
+  background: linear-gradient(to right,#0ea5e9,#2563eb);
+
+  color:#fff;
+
+}
+
+
+
+header{
+
+  text-align:center;
+
+  padding:20px;
+
+  font-size:28px;
+
+  font-weight:bold;
+
+  font-family: serif;
+
+}
+
+
+.tabs{
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  background:#e0f2fe;
+
+  padding:10px;
+
+  gap:10px;
+
+  justify-content:center;
+
+}
+
+
+
+.tabs button{
+
+  padding:10px 20px;
+
+  border:none;
+
+  background:#0ea5e9;
+
+  color:white;
+
+  border-radius:8px;
+
+  cursor:pointer;
+
+}
+
+
+
+.tabs button.active{
+
+  background:#0369a1;
+
+}
+
+.table-container{
+
+  background:#fff;
+
+  color:#000;
+
+  margin:20px;
+
+  border-radius:10px;
+
+  overflow:auto;
+
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+
+  width: calc(100% - 40px);
+  overflow-x: auto;
+}
+
+
+
+table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+
+}
+
+
+
+th{
+
+  background:#e0f2fe;
+
+  padding:12px;
+
+  border:1px solid black;
+
+}
+
+
+
+td{
+
+  padding:10px;
+
+  border:1px solid black;
+
+}
+
+
+
+td[contenteditable="true"]{
+
+  background:#f8fafc;
+
+}
+
+.highlight-row {
+background-color: yellow !important;
+font-weight: bold;
+}
+
+.hardware-search{
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px 0;
+}
+
+.hardware-search input{
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 20px solid #333;
+  width: 260px;
+  font-size: 14px;
+}
+
+.highlight-row {
+background-color: yellow !important;
+font-weight: bold;
+}
+
+.sheet-search{
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px 0;
+}
+
+.sheet-search input{
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 20px solid #333;
+  width: 260px;
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+
+
+
+  .table-container {
+
+    margin: 10px;
+
+    width: calc(100% - 20px);
+
+  }
+
+
+
+  table {
+
+    font-size: 13px;
+
+  }
+
+
+
+  th, td {
+
+    padding: 8px 6px;
+
+  }
+
+
+
+}
+
+
+
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+
+<header>Universal Aluminium - Price List</header>
+<div class="tabs">
+
+  <button onclick="showSheet('sheet1')" class="active">POWDER COATING</button>
+
+  <button onclick="showSheet('sheet2')">ELECTRO / CHAMPION</button>
+
+  <button onclick="showSheet('sheet3')">HARDWARE</button>
+
+  <button onclick="showSheet('sheet4')">WPC</button>
+
+
+</div>
+
+
+<div id="sheet1" class="sheet">
+
+  <div class="sheet-search">
+<input type="text" id="PowderSearch" placeholder="Search item..." onkeyup="searchPowderItem()">
+</div>
+
+
+<h3>Powder coating Price List</h3>
+
+<div class="table-container">
+
+<table id="table1">
+
+<thead>
+
+<tr>
+
+<th>SLNO</th>
+
+<th>ITEM NAME</th>
+
+<th>WEIGHT</th>
+
+<th>COLOUR</th>
+
+<th>PRICE</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+// Default dataset (shows if Firebase empty)
+
+const itemsData = [
+
+["1.5x1 - P","700 g","400"],
+
+["1.5x1 - P","750 g","425"],
+
+["1.5x1 - P","800 g","450"],
+
+["1.5x1 - P","850 g","475"],
+
+["1.5x1 - P","900 g","500"],
+
+["1.5x1 - P","950 g","525"],
+
+["1.5x1 - P","1 kg","550"],
+
+["1.5x1 - P","1.050 kg","575"],
+
+["1.5x1 - P","1.100 kg","600"],
+
+["1.5x1 - P","1.200 kg","645"],
+
+["1.5x1 - P","1.300 kg","695"],
+
+["2.5x1.5 Plain / SS / D/S","1.600 kg","890"],
+
+["2.5x1.5 Plain / SS / D/S","1.650 kg","910"],
+
+["2.5x1.5 Plain / SS / D/S","1.700 kg","935"],
+
+["2.5x1.5 Plain / SS / D/S","1.750 kg","960"],
+
+["2.5x1.5 Plain / SS / D/S","1.800 kg","990"],
+
+["GLZ Clip - Light","-","138"],
+
+["GLZ Clip - Medium","-","163"],
+
+["2x1 - P", "1.050 kg", "545"],
+["2x1 - P", "1.100 kg", "570"],
+["2x1 - P", "1.200 kg", "610"],
+["2x1 - P", "1.300 kg", "650"],
+["2x1 - P", "1.400 kg", "700"],
+["2x1 - P", "1.500 kg", "745"],
+
+["Show Case 9’", "-", "515"],
+["Show Case 10’", "-", "560"],
+["Show Case 12’", "-", "680"],
+
+["Double Channel", "-", "1210"],
+
+["1¼ Square – Medium", "1 kg", "520"],
+["1¼ Square – Heavy", "1.1 kg", "565"],
+
+["Mosquito Small", "450 g", "220 / 260"],
+["Glazing Plate", "-", "260"],
+
+["7/8 Square Lip", "-", "300"],
+["7/8 Square D/Lip", "-", "400 / 350"],
+["1” Square", "-", "265 / 310"],
+
+["Kitchen – P Sec", "-", "460"],
+["J Square", "-", "500 / 515"],
+
+["Grill F Small", "-", "185"],
+["Grill F Big", "-", "220"],
+
+["34 Clip", "-", "310"],
+["34 – 2 Sec", "1420 g", "700"],
+
+["Mosquito Sec – Light", "700 g", "-"],
+["Mosquito Sec – Medium", "850 g", "385 / 395"],
+["Mosquito Sec – Heavy", "950 g", "-"],
+
+["3/4 x 1/2 Sec – Light", "450 g", "260"],
+["3/4 x 1/2 Sec – Medium", "-", "260"],
+["3/4 x 1/2 Sec – Heavy", "600 g", "400"],
+
+["Mosquito Sec Big – Light", "-", "-"],
+["Mosquito Sec Big – Medium", "1.1 kg", "525"],
+["Mosquito Sec Big – Heavy", "1.2 kg", "585 / 635"],
+
+
+["1 x 1/2 Sec", "-", "460 / 380"],
+
+  ["3/8 L-Angle", "-", "80"],
+
+  ["3/8 U-Channel Heavy", "-", "135"],
+
+  ["5/8 L-Angle", "-", "160"],
+
+  ["3/4 Square", "-", "195"],
+
+
+
+  ["Door Vertical Sec 7’", "1.100 kg", "560"],
+
+  ["Door Vertical Sec 7’", "1.200 kg", "605"],
+
+  ["Door Vertical Sec 7’", "1.250 kg", "590"],
+
+  ["Door Vertical Sec 7’", "1.300 kg", "625"],
+
+  ["Door Vertical Sec 7’", "1.350 kg", "665"],
+
+  ["Door Vertical Sec 7’", "1.450 kg", "710"],
+
+
+
+  ["Door Vertical Sec 8’ Light", "1.450 kg", "715"],
+
+  ["Door Vertical Sec 8’ Heavy", "1.550 kg", "760"],
+
+
+
+  ["Door Top", "2 kg", "1020"],
+
+  ["Door Bottom", "3 kg", "1450"],
+
+  ["Door Divider", "2 kg", "1000"],
+
+
+
+  ["3/8 Pipe", "-", "85"],
+
+  ["3 x 1/2", "-", "810"],
+
+  ["4 x 1/2", "-", "815 / 860"],
+
+  ["J Square Lip", "-", "185"],
+
+  ["C Track", "3 kg", "200"],
+
+  ["Small H", "-", "-"],
+
+
+
+  ["Shutter - P", "900 g", "435"],
+
+  ["Interlock", "900 g", "450"],
+
+
+
+  ["2 Track Top 10’", "1.750 kg", "900"],
+
+  ["2 Track Top 12’", "2.100 kg", "1080"],
+
+  ["2 Track Bottom 10’", "1.700 kg", "850"],
+
+  ["2 Track Bottom 12’", "2.150 kg", "1090"],
+
+
+
+  ["20 A-Section 10’", "1.150 kg", "575"],
+
+  ["20 A-Section 12’", "1.300 kg", "635"],
+
+  ["20 A-Section 12’ H", "1.300 kg", "-"],
+
+
+
+  ["Interlock 10’", "1.170 kg", "585"],
+
+  ["Interlock 12’", "1.460 kg", "715"],
+
+  ["H Section 12’", "1.300 kg", "630"],
+
+
+
+  ["A Section 10’", "1.100 kg", "495"],
+
+  ["A Section 12’", "1.130 kg", "560"],
+
+  ["Interlock 10’", "1.050 kg", "535"],
+
+  ["Interlock 12’", "1.250 kg", "620"],
+
+  ["H Section 10’", "960 g", "480"],
+
+  ["H Section 12’", "1.100 kg", "550"],
+
+
+
+  ["27 SS Algeria Outer 8’", "1.600 kg", "820"],
+
+  ["27 SS Algeria Outer 10’", "2.050 kg", "1040"],
+
+  ["27 SS Algeria Outer 12’", "2.400 kg", "1235"],
+
+
+
+  ["27 SS Shutter 8’", "1.600 kg", "810"],
+
+  ["27 SS Shutter 10’", "2.100 kg", "975"],
+
+  ["27 SS Shutter 12’", "2.500 kg", "1130"],
+
+
+
+  ["27 SS Adapter Clip 8’", "700 g", "360"],
+
+  ["27 SS Adapter Clip 10’", "1 kg", "460"],
+
+  ["27 SS Adapter Clip 12’", "1.200 kg", "545"],
+
+
+
+  ["25 mm T-Section", "380 g", "200"],
+
+  ["L-Angle", "-", "155"],
+
+  ["Box Clip", "550 g", "275"],
+
+
+
+  ["Twin Style Bottom Big", "3.800 kg", "1950"],
+
+  ["Twin Style Bottom Small", "2.160 kg", "1310"],
+
+  ["Female Section", "-", "1135"],
+
+
+
+  ["20 mm U-Channel", "750 g", "400"],
+
+  ["Glass – H", "650 g", "345"],
+
+  ["Grill – H", "700 g", "420"],
+
+  ["Kitchen – S/S", "920 g", "495"],
+
+  ["Kitchen – D/S", "1130 g", "580"],
+
+
+
+  ["2.1/2 x 1.1/4 Glazing Sec", "1.850 kg", "960"],
+
+  ["2.1/2 x 1.1/4 Glazing Sec", "1.950 kg", "990"],
+
+  ["2.1/2 x 1.1/4 Glazing Sec", "2.050 kg", "1050"],
+
+  ["2.1/2 x 1.1/4 Glazing Sec", "2.150 kg", "1075"],
+
+
+
+  ["J Water Channel", "420 g", "230"],
+
+  ["3/4 F-Angle", "-", "105"],
+
+
+
+  ["Drawer Sec – Medium", "1.160 kg", "835 / 940"],
+
+  ["Drawer Sec – Heavy", "1.950 kg", "980"],
+
+
+
+  ["Show Case Sec Corner – Big", "1.350 kg", "715"],
+
+  ["Show Case Sec Corner – Small", "1.150 kg", "620"],
+
+
+
+  ["20 Lip Sec – Medium", "1.060 kg", "545 / 600"],
+
+  ["20 Lip Sec – Heavy", "-", "760"],
+
+
+
+  ["25 Lip Sec Medium", "1.450 kg", "760"],
+
+  ["25 Lip Sec Heavy", "1.550 kg", "805"],
+
+  ["25 Lip Sec", "1.650 kg", "850"],
+
+  ["25 Lip Sec", "1.750 kg", "890 / 920"],
+
+
+
+  ["Handle Sec", "1.650 kg", "850"],
+
+  ["Handle Sec", "1.750 kg", "835 / 860"],
+
+  ["Handle Sec", "1.950 kg", "970"],
+
+  ["Handle Sec", "2 kg", "1020"],
+
+  ["Handle Sec H", "2.150 kg", "1070"],
+
+
+
+  ["20 SS 3 Track Top 10’", "2.500 kg", "1280"],
+
+  ["20 SS 3 Track Top 12’", "3 kg", "1510 / 1545 / 1610"],
+
+  ["3 Track Bottom 10’", "2.450 kg", "1250"],
+
+  ["3 Track Bottom 12’", "2.950 kg", "1500"],
+
+
+
+  ["Algeria 27 SS 3 Track 8’", "2.600 kg", "1275"],
+
+  ["Algeria 27 SS 3 Track 10’", "-", "1510"],
+
+  ["Algeria 27 SS 3 Track 12’", "3.750 kg", "1860"],
+
+
+
+  ["1.1/2 x 1 Cleat 8’", "-", "-"],
+
+
+
+  ["40 SS Mullion 10’", "2.050 kg", "1090"],
+
+  ["40 SS Mullion 12’", "2.550 kg", "1310"],
+
+  ["40 SS Chair Section 10’", "2.300 kg", "970"],
+
+  ["40 SS Chair Section 12’", "2.480 kg", "1230"],
+
+
+
+  ["40 Clip 10’", "950 g", "460"],
+
+  ["40 Clip 12’", "1 kg", "460"],
+
+  ["1 in Cleat Angle", "-", "380"],
+
+  ["3/4 Cleat Angle", "-", "290"],
+
+  ["Pipe Curtain", "-", "220"],
+
+  ["J Square Lip", "-", "190"],
+
+  ["U Channel (1 3/4 x 2.5 mm)", "-", "490"],
+
+  ["1.1/2 x 1 Cleat", "1.200 kg", "610"]
+
+
+
+];
+
+
+
+const tbody = document.getElementById("tableBody");
+
+
+
+// Render fallback data
+
+function renderLocalData(){
+
+  tbody.innerHTML = "";
+
+  itemsData.forEach((item,index)=>{
+
+    tbody.innerHTML += `
+
+      <tr>
+
+        <td>${index+1}</td>
+
+        <td>${item[0]}</td>
+
+        <td>${item[1]}</td>
+
+        <td>-</td>
+
+        <td>${item[2]}</td>
+
+      </tr>`;
+
+  });
+
+}
+
+
+
+renderLocalData();
+
+</script>
+
+
+
+
+<!-- FIREBASE CONNECTION -->
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+import { addDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyDFD7MhXjxBxctyjer9jp7pLh6E6ek4y4A",
+
+  authDomain: "universal-traders-pricelist.firebaseapp.com",
+
+  projectId: "universal-traders-pricelist",
+
+  storageBucket: "universal-traders-pricelist.firebasestorage.app",
+
+  messagingSenderId: "150604008965",
+
+  appId: "1:150604008965:web:efe915ee6cbce92530566c"
+
+};
+
+
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+
+async function loadItems(){
+
+  const querySnapshot = await getDocs(collection(db, "items"));
+
+  const tableBody = document.getElementById("#table1 tbody");
+
+  
+
+  if(querySnapshot.empty){
+
+    console.log("No Firebase data, showing local dataset");
+    renderLocalData();
+    return;
+
+  }
+
+
+
+  tableBody.innerHTML = "";
+
+
+
+  querySnapshot.forEach((doc) => {
+
+    const item = doc.data();
+
+    tableBody.innerHTML += `
+
+      <tr>
+
+        <td>${item.slno}</td>
+
+        <td>${item.name}</td>
+
+        <td>${item.weight}</td>
+
+        <td>${item.colour || "-"}</td>
+
+        <td>${item.price}</td>
+
+      </tr>
+
+    `;
+
+  });
+
+}
+
+
+
+loadItems();
+
+async function uploadHardware() {
+const hardwareRef = collection(db, "hardware");
+
+for (let i = 0; i < hardwareData.length; i++) {
+const item = hardwareData[i];
+
+await addDoc(hardwareRef, {
+slno: i + 1,
+name: item[0],
+price: item[1]
+});
+}
+
+alert("Hardware uploaded successfully!");
+}
+ // uploadHardware();
+
+
+</script>
+
+<!-- SHEET 2 : Electro / Champion -->
+
+<div id="sheet2" class="sheet" style="display:none;">
+
+  <h3>Electro / Champion Price List</h3>
+
+  <div class="table-container">
+
+    <table id="table2" border="1" cellpadding="8">
+
+      <thead>
+
+        <tr>
+
+          <th>Sl No</th>
+
+          <th>Item Name</th>
+
+          <th>Weight</th>
+
+          <th>Colour</th>
+
+          <th>Price</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="tbody2">
+
+        <!-- Data will come later -->
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+
+
+
+<!-- SHEET 3 : Hardware -->
+
+<div id="sheet3" class="sheet" style="display:none;">
+
+<div class="hardware-search">
+<input type="text" id="hardwareSearch" placeholder="Search item..." onkeyup="searchHardwareItem()">
+</div>
+
+  <h3>Hardware Price List</h3>
+
+  <div class="table-container">
+
+    <table id="table3" border="1" cellpadding="8">
+
+      <thead>
+
+        <tr>
+
+          <th>Sl No</th>
+
+          <th>Item Name</th>
+
+          <th>Price</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="tbody3">
+
+        <!-- Data will come later -->
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+<script>
+
+// ================= HARDWARE SHEET DATA =================
+
+const hardwareData = [
+
+  ["50 SS Hinges (Black/White)", "180-390"],
+
+  ["Lock", "1900"],
+
+  ["Ball Hinges", "280"],
+
+  ["52 SS Lock", "200"],
+
+  ["52 SS Hinges", "175"],
+
+  ["9.5x4 Screw", "235"],
+
+  ["13x4 CSK", "240"],
+
+  ["13x4 CSK Star", "240"],
+
+  ["13x6 Screw CSK Star", "330"],
+
+  ["13x6 Penod Screw Star", "295"],
+
+  ["19x6 Star CSK", "450"],
+
+  ["19x6 Star Penod", "450"],
+
+  ["25x6 CSK Star", "500"],
+
+  ["1x8 Screw", "290"],
+
+  ["32x6 Star", "320"],
+
+  ["10x6 Star", "320"],
+
+  ["40\" Hinges", "150"],
+
+["40\" Handle", "140"],
+
+["40\" Handle TPI", "145"],
+
+["40\" Lock", "150"],
+
+["40\" Stopper 2PC", "200"],
+
+["40\" Box Cleat", "35"],
+
+["40\" Mullian Corner", "40"],
+
+["Magic Corner", "35"],
+
+["Wheel", "40"],
+
+["Magic Corner (New)", "35"],
+
+["Lock Etta", "310"],
+
+["Lock Orbit", "160"],
+
+["Lock Rens", "185"],
+
+["Lock Eagle 2PC", "280"],
+
+["Kinglong Latch", "200"],
+
+["Keylock", "350"],
+
+["Ordinary Latch", "120"],
+
+["L Corner", "70"],
+
+["Drell", "3550"],
+
+["Drell", "3600"],
+
+["Drell", "350"],
+
+["20 SS PVC Wheel", "7.50"],
+
+["20 SS Metal Wheel", "25.00"],
+
+["18 SS PVC Wheel", "7.50"],
+
+["18 SS Metal Wheel", "10.00"],
+
+["EPDM Rubber Wheel TVS", ""],
+
+["6-Blaid Louver", "250"],
+
+["5-Blaid Louver", "200"],
+
+["4-Blaid Louver", "150"],
+
+["16x7 (1000) Self Screw", "500"],
+
+["19x7 (1000) Self Screw", "520"],
+
+["25x7 (800) Self Screw", "550"],
+
+["50x7 (400) Self Screw", "550"],
+
+["38x7 (500) Self Screw", "520"],
+
+["60x6 (250) Self Screw", "400"],
+
+["1\" SS Screw", "205"],
+
+["2\" SS Screw (200)", "350"],
+
+["2.5\" SS Screw (200)", "600"],
+
+["3\" SS Screw (250)", "730"],
+
+["8mm x 32 SS Screw (200)", "525"],
+
+["32x6 CSK Star", "320"],
+
+["38x6 CSK Star", "345"],
+
+["2\" Wood Screw", "125"],
+
+["2.5\" Wood Screw", "145"],
+
+["3\" Wood Screw", "190"],
+
+["Handle Screw", "370"],
+
+["12x6 Panel Screw", "380"],
+
+["60x8 Wooden Screw (Anvil)", "130"],
+
+["18\" Hardwyn", "350"],
+
+["16\" Hardwyn", "275"],
+
+["20\" Slider", "550"],
+
+["18\" Slider", "480"],
+
+["16\" Slider", "430"],
+
+["Door Gear C Wheel", "235"],
+
+["Door Gear G Wheel", "285"],
+
+["Ordinary Sliding Wheel", "7.50"],
+
+["Mosquito Rubber Wheel", "2.00"],
+
+["Silicon GP White", "185"],
+
+["Silicon GP Clear", "185"],
+
+["Silicon GP Black", ""],
+
+["Silicon W/S White", "250"],
+
+["Silicon W/S Clear", "250"],
+
+["Silicon W/S Black", "250"],
+
+["Silicon Gun", ""],
+
+["Rivet 1/8 (500)", "220"],
+
+["Rivet 1/8 (1000)", "400"],
+
+["Rivet 1/8 (500 Color)", "210"],
+
+["5/32 Rivet (500)", "315"],
+
+["5/32 Rivet (1000)", ""],
+
+["Rivet Nob", "30"],
+
+["Rivet Spring", "30"],
+
+["Rivet Gun Drilllex", "350"],
+
+["Silicon Gun Drilllex", "400"],
+
+["Silicon Gun", "200"],
+
+["Rivet Gun Ultra", "330"],
+
+["Rivet Gun", "360"],
+
+["Blind Rivet Gun (Strong)", "1400"],
+
+["19x6 Dry Wall Screw (Black)", "350"],
+
+["25x6 Dry Wall Screw (800)", "350"],
+
+["50x6 Dry Wall Screw (500)", "300"],
+
+["60x6 Dry Wall Screw (300)", "350"],
+
+["75x6 Dry Wall Screw (300)", "400"],
+
+["16x6 Dry Wall Screw (1000)", "320"],
+
+["32x6 Dry Wall Screw", "275"],
+
+["38x6 Dry Wall Screw (500)", "300"],
+
+["13x6 Dry Wall Screw (1000)", "320"],
+
+["6.8x7MM 4P ALG 175MTR Sunmark Weather Strip", "705"],
+
+["6.8x5MM 3P Window 100 MTR Sunmark Weather Strip", "235"],
+
+["8.4x9MM 4P ALG Door 125 MTR Sunmark Weather Strip", "700"],
+
+["O Seal 4.2MM 405 Code No:100 250MTR Sunmark", "3095"],
+
+["Pressfit Gasket Code No:142 300MTR Sunmark Black&Gray", ""],
+
+["PB-CX7-3P Handle Section 200MTR (Adorn)", "900"],
+
+["4mm Bearing (No:76)", "250"],
+
+["Aluminium Roll 3\"", "37-54"],
+
+["50 Hinge Newtype", "210"],
+
+["PU Foam", "420"],
+
+["Builders Bond (Gun)", "250"],
+
+["Pencil (Normal)", "25"],
+
+["Foam Solution", "350"],
+
+["Double Tape", "350"],
+
+["Silicon Solvent", "120"],
+
+["L Bracket", "5"],
+
+["GTPT 22\"", "1100"],
+
+["GTPT 24\"", "1200"],
+
+["GTPT 26\"", "1300"],
+
+["GTPT 30\"", "1400"],
+
+["Crescent Latch", "100"],
+
+["Glass Runner", "15"],
+
+["Curtain Bracket", ""],
+
+["Curtain Finayil", ""],
+
+["6\" Arms", "27.50"],
+
+["7\" Arms", "32"],
+
+["8\" Arms", "36"],
+
+["10\" Arms", "40"],
+
+["12\" Arms", "44"],
+
+["Star Bit", "45"],
+
+["3/32 Bit", "35"],
+
+["7/64 Bit", "35"],
+
+["3.5 Bit", "95"],
+
+["5/32 Bit", "60"],
+
+["1/4 Bit", "80"],
+
+["5mm Concrete Bit", "115"],
+
+["6mm Concrete Bit", "65"],
+
+["5mm Long Hammering Bit", "100"],
+
+["6mm Long Hammering Bit", "180"],
+
+["15x16 Plate Basket", "850"],
+
+["15x16 Plain Basket", "850"],
+
+["15x16 Partition Basket", "900"],
+
+["15x16 Cup & Saucer", "900"],
+
+["15x16 Cutlary", "1200"],
+
+["15x18 Plate Basket", "875"],
+
+["15x18 Plain Basket", "850"],
+
+["15x18 Partition Basket", "900"],
+
+["15x18 Partition Basket (4\")", "875"],
+
+["15x18 Cup & Saucer", ""],
+
+["15x18 Cutlary", "1250"],
+
+["15x20 Plate Basket", "900"],
+
+["15x20 Plain Basket", "900"],
+
+["15x20 Partition Basket", "900"],
+
+["15x20 Cup & Saucer", "900"],
+
+["15x20 Cutlary", "1300"],
+
+["15x20 Thali Basket", "900"],
+
+["Master Door Closer - Nano", "600"],
+
+["Muster Galaxy Door Closer", "750"],
+
+["Muster Model No:D-29 Door Closer", "850"],
+
+["KDM Door Closer", ""],
+
+["Ebco Door Closer", ""],
+
+["Hardwyn Door Closer (Alu-Silver)", "900"],
+
+["Metal Swift Door Closer (Colour)", "950"],
+
+["TPI Door Closer", "475"],
+
+["CNI Gold Door Closer", "500"],
+
+["Hardwyn Metal U88 Floor Spring", "2750"],
+
+["Hardwyn U32 Floor Spring", "3100"],
+
+["Master 10\" Floor Spring", "3000"],
+
+["Master F32 Floor Spring", "1900"],
+
+["TPI Floor Spring", "2200"],
+
+["Door Lock Sliding (L-Maxx)", "270"],
+
+["Door Lock Sliding (Panel Econ)", "490"],
+
+["Surya Cylindrical Lock", "490"],
+
+["SS Cylindrical Lock (Speedal)", "315"],
+
+["Cylindrical Lock IMV", "500"],
+
+["3\" Aluminium Tower Bolt", "20"],
+
+["4\" Aluminium Tower Bolt L", "30"],
+
+["4\" Aluminium Tower Bolt L-PC", "35"],
+
+["4\" Aluminium Tower Bolt Heavy", "60"],
+
+["6\" Aluminium Tower Bolt L", "40"],
+
+["6\" Aluminium Tower Bolt PC", "45"],
+
+["6\" Aluminium Tower Bolt Heavy", "75"],
+
+["8\" Aluminium Tower Bolt Heavy", "90"],
+
+["8\" Steel Tower Bolt", "100"],
+
+["Mosquito Handle Big", "15"],
+
+["SS Mosquito Net 3'", "15000"],
+
+["SS Mosquito Net 4'", "19000"],
+
+["SS Mosquito Net 5'", "14500"],
+
+["Steel Net", "85"],
+
+["Mosquito Net Aluminium", "36"],
+
+["Mosquito Net PVC", "16"],
+
+["Mosquito Hinges PC", "15"],
+
+["Mosquito Hinges W/O", "12"],
+
+["Mosquito Cleat", "6.50"],
+
+["Mosquito Big Hinges", "65"],
+
+["Mosquito Net Nylon 4'", "2300"],
+
+["Mosquito Net Nylon 3'", "2200"],
+
+["Mosquito Net Nylon 5'", "3400"],
+
+["Mosquito Roller Bend", "200"],
+
+["Mosquito Roller Straight", "250"],
+
+["5MM Grip", "20"],
+
+["6 MM Grip", "25"],
+
+["Cheel", "1.50 Pair"],
+
+["Bush", "2.50"],
+
+["PVC Ordinary Lock", "50"],
+
+["2 Way Corner", "5"],
+
+["3 Way Corner", "5"],
+
+["Kitchen Corner", "6.50"],
+
+["20 Lip Corner", "5"],
+
+["Handle Bush", "5"],
+
+["20 Asection Corner", "8"],
+
+["1.5x1 Corner", "8"],
+
+["7/8 Lip Corner", "3"],
+
+["J Square Corner", "5.5"],
+
+["2x1 Corner", "8"],
+
+["25 Lip Corner", "7"],
+
+["1/2x1 Corner", "4"],
+
+["1x1 Corner", "4"],
+
+["AL Pipe Corner", "6"],
+
+["Maruthi Lock", "950"],
+
+["Maruthi Lock Ebco", ""],
+
+["Maruthi Lock Metta", ""],
+
+["Sliding Lock Door", "310"],
+
+["Glass Runner", "1500"],
+
+["Color Hinges 3\"", "12.50"],
+
+["7/8 Lip Corner", "6"],
+
+["1x1x1 Corner", "8"],
+
+["L Showcase Corner", "9"],
+
+["Mosquito Aluminium Net 3'", ""],
+
+["Mosquito Aluminium Net 4'", ""],
+
+["Mosquito Aluminium Net 5'", ""],
+
+["Mosquito Aluminium Color 3' (1st)", "31 Sqft"],
+
+["Mosquito Aluminium Color 4' (1st)", ""],
+
+["Mosquito Aluminium Color 5' (1st)", ""],
+
+["Mosquito Aluminium Color 3' (2nd)", ""],
+
+["Mosquito Aluminium Color 4' (2nd)", ""],
+
+["Mosquito Aluminium Color 5' (2nd)", ""],
+
+["Door Pivot", "75"],
+
+["Rod", "25"],
+
+["6\" Handle - Alu", "40"],
+
+["6\" Handle - Color", "45"],
+
+["8\" Handle - Alu", ""],
+
+["8\" Handle - Color", ""],
+
+["6\" Handle - Fancy", ""],
+
+["8\" Handle - Fancy (Eagle Boss)", "80"],
+
+["Hymax 10\"", "735"],
+
+["Hymax 12\"", "265"],
+
+["Open Window Handle (Ideal) Black (R)", "70"],
+
+["Open Window Handle (Tycoon Safe-T)", "45"],
+
+["Auto Hinges - Ebco", "70"],
+
+["Auto Hinges 10\"", "80"],
+
+["Auto Hinges 8\"", "80"],
+
+["Short Arm Hinges - Ebco", "80"],
+
+["Soft Arm Hinges Soft Close (Nexel SS)", "130"],
+
+["Masking Tape", "150"],
+
+["3M Tape", "120"],
+
+["Glass to Glass Lock - S", "900"],
+
+["Glass to Glass Lock - B", "950"],
+
+["Sliding Door Lock Burly", "375"],
+
+["Slim Connector", "50"],
+
+["Multi Lock", "160"]
+
+];
+
+
+
+// Render Hardware Table
+
+function renderHardwareTable() {
+
+  const tbody3 = document.getElementById("tbody3");
+
+  tbody3.innerHTML = "";
+
+
+
+  hardwareData.forEach((item, index) => {
+
+    tbody3.innerHTML += `
+
+      <tr>
+
+        <td>${index + 1}</td>
+
+        <td>${item[0]}</td>
+
+        <td>${item[1]}</td>
+
+      </tr>
+
+    `;
+
+  });
+
+}
+
+
+
+// Load hardware data initially
+
+renderHardwareTable();
+
+function searchHardwareItem() {
+
+  const input = document.getElementById("hardwareSearch").value.toLowerCase();
+
+  const rows = document.querySelectorAll("#tbody3 tr");
+
+
+
+  let firstMatch = null;
+
+
+
+  rows.forEach(row => {
+
+    row.classList.remove("highlight-row");
+
+
+
+    const itemName = row.cells[1].innerText.toLowerCase();
+
+
+
+    if (itemName.includes(input) && input !== "") {
+
+      row.classList.add("highlight-row");
+
+
+
+      if (!firstMatch) {
+
+        firstMatch = row; // store only first match
+
+      }
+
+    }
+
+  });
+
+
+
+  // Scroll only once
+
+  if (firstMatch) {
+
+    firstMatch.scrollIntoView({
+
+      behavior: "smooth",
+
+      block: "center"
+
+    });
+
+  }
+
+}
+
+
+
+</script>
+
+
+
+
+<!-- SHEET 4 : WPC -->
+
+<div id="sheet4" class="sheet" style="display:none;">
+
+  <h3>WPC Price List</h3>
+
+  <div class="table-container">
+
+    <table id="table4" border="1" cellpadding="8">
+
+      <thead>
+
+        <tr>
+
+          <th>Sl No</th>
+
+          <th>Item Name</th>
+
+          <th>Weight</th>
+
+          <th>Colour</th>
+
+          <th>Price</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="tbody4">
+
+        <!-- Data will come later -->
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+<script>
+
+function showSheet(sheetId) {
+
+  // Hide all sheets
+
+  const sheets = document.querySelectorAll('.sheet');
+
+  sheets.forEach(sheet => sheet.style.display = 'none');
+
+
+
+  // Remove active class from all buttons
+
+  const buttons = document.querySelectorAll('.tabs button');
+
+  buttons.forEach(btn => btn.classList.remove('active'));
+
+
+
+  // Show selected sheet
+
+  document.getElementById(sheetId).style.display = 'block';
+
+
+
+  // Add active class to clicked button
+
+  event.target.classList.add('active');
+
+}
+
+</script>
+
+
+<script>
+
+function searchPowderItem() {
+
+  const input = document.getElementById("PowderSearch").value.toLowerCase();
+
+  const rows = document.querySelectorAll("#table1 tbody tr");
+
+
+
+  let firstMatch = null;
+
+
+
+  rows.forEach(row => {
+
+    row.classList.remove("highlight-row");
+
+
+
+    // ITEM NAME column = index 1
+
+    const itemName = row.cells[1].innerText.toLowerCase();
+
+
+
+    if (input && itemName.includes(input)) {
+
+      row.classList.add("highlight-row");
+
+
+
+      if (!firstMatch) {
+
+        firstMatch = row;
+
+      }
+
+    }
+
+  });
+
+
+
+  if (firstMatch) {
+
+    firstMatch.scrollIntoView({
+
+      behavior: "smooth",
+
+      block: "center"
+
+    });
+
+  }
+
+}
+
+</script>
+
+
+
+</body>
+
+</html>
